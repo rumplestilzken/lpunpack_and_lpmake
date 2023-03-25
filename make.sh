@@ -16,13 +16,13 @@ case "$OSTYPE" in
   *)
   ;;
 esac
-$CC -std=c++17 -I../include -Iinclude -I../base/include -DLIBLOG_LOG_TAG=1006 -DSNET_EVENT_LOG_TAG=1397638484 ${CFLAGS} -c log_event_list.cpp log_event_write.cpp logger_name.cpp logger_read.cpp logger_write.cpp logprint.cpp properties.cpp ${src}
+$CC -std=c++17 -stdlib=libc++ -I../include -Iinclude -I../base/include -DLIBLOG_LOG_TAG=1006 -DSNET_EVENT_LOG_TAG=1397638484 ${CFLAGS} -c log_event_list.cpp log_event_write.cpp logger_name.cpp logger_read.cpp logger_write.cpp logprint.cpp properties.cpp ${src}
 $AR rcs ../lib/liblog.a *.o
 rm -r *.o
 unset src
 
 cd ../zlib
-$CC -I. -O3 -DHAVE_HIDDEN -DZLIB_CONST ${CFLAGS} -c adler32.c compress.c cpu_features.c crc32.c deflate.c gzclose.c gzlib.c gzread.c gzwrite.c infback.c inflate.c inftrees.c inffast.c trees.c uncompr.c zutil.c
+$CC -stdlib=libc++ -I. -O3 -DHAVE_HIDDEN -DZLIB_CONST ${CFLAGS} -c adler32.c compress.c cpu_features.c crc32.c deflate.c gzclose.c gzlib.c gzread.c gzwrite.c infback.c inflate.c inftrees.c inffast.c trees.c uncompr.c zutil.c
 $AR rcs ../lib/libz.a *.o
 rm -r *.o
 
@@ -35,33 +35,33 @@ case "$OSTYPE" in
     src="errors_windows.cpp utf8.cpp"
   ;;
 esac
-$CC -std=c++17 -I../include ${CFLAGS} -c abi_compatibility.cpp chrono_utils.cpp file.cpp liblog_symbols.cpp logging.cpp mapped_file.cpp parsebool.cpp parsenetaddress.cpp process.cpp properties.cpp stringprintf.cpp strings.cpp threads.cpp test_utils.cpp ${src}
+$CC -std=c++17 -stdlib=libc++ -I../include ${CFLAGS} -c abi_compatibility.cpp chrono_utils.cpp file.cpp liblog_symbols.cpp logging.cpp mapped_file.cpp parsebool.cpp parsenetaddress.cpp process.cpp properties.cpp stringprintf.cpp strings.cpp threads.cpp test_utils.cpp ${src}
 $AR rcs ../lib/libbase.a *.o
 rm -r *.o
 unset src
 
 cd ../libsparse
-$CC -std=c++17 -I../include ${CFLAGS} -c backed_block.cpp output_file.cpp sparse.cpp sparse_crc32.cpp sparse_err.cpp sparse_read.cpp
+$CC -std=c++17 -stdlib=libc++ -I../include ${CFLAGS} -c backed_block.cpp output_file.cpp sparse.cpp sparse_crc32.cpp sparse_err.cpp sparse_read.cpp
 $AR rcs ../lib/libsparse.a *.o
 rm -r *.o
 
 cd ../fmtlib
-$CC -std=c++17 -Iinclude ${CFLAGS} -c src/format.cc
+$CC -std=c++17 -stdlib=libc++ -Iinclude ${CFLAGS} -c src/format.cc
 $AR rcs ../lib/fmtlib.a *.o
 rm -r *.o
 
 cd ../liblp
-$CC -std=c++17 -I../include -D_FILE_OFFSET_BITS=64 ${CFLAGS} -c builder.cpp images.cpp partition_opener.cpp property_fetcher.cpp reader.cpp utility.cpp writer.cpp
+$CC -std=c++17 -stdlib=libc++ -I../include -D_FILE_OFFSET_BITS=64 ${CFLAGS} -c builder.cpp images.cpp partition_opener.cpp property_fetcher.cpp reader.cpp utility.cpp writer.cpp
 $AR rcs ../lib/liblp.a *.o
 rm -r *.o
 
 cd ../ext4_utils
-$CC -std=c++17 -I../include -fno-strict-aliasing ${CFLAGS} -c ext4_utils.cpp wipe.cpp ext4_sb.cpp
+$CC -std=c++17 -stdlib=libc++ -I../include -fno-strict-aliasing ${CFLAGS} -c ext4_utils.cpp wipe.cpp ext4_sb.cpp
 $AR rcs ../lib/libext4_utils.a *.o
 rm -r *.o
 
 cd ../libcrypto_utils
-$CC -Iinclude -I../boringssl/include ${CFLAGS} -c android_pubkey.c
+$CC -Iinclude -stdlib=libc++ -I../boringssl/include ${CFLAGS} -c android_pubkey.c
 $AR rcs ../lib/libcrypto_utils.a *.o
 rm -r *.o
 
@@ -188,7 +188,7 @@ else
   esac
 fi
 
-        $CC -Iinclude -std=c99 \
+        $CC -stdlib=libc++ -Iinclude -std=c99 \
         ${CFLAGS} \
         ${CFLAGS_CRYPTO} \
         -DBORINGSSL_IMPLEMENTATION \
@@ -431,7 +431,7 @@ $AR rcs ../lib/libcrypto.a *.o
 rm -r *.o
 
 cd ../protobuf
-$CC -std=c++17 -Isrc -Iandroid -DHAVE_ZLIB=1 ${CFLAGS} -c \
+$CC -std=c++17 -stdlib=libc++ -Isrc -Iandroid -DHAVE_ZLIB=1 ${CFLAGS} -c \
 src/google/protobuf/any_lite.cc \
 src/google/protobuf/arena.cc \
 src/google/protobuf/extension_set.cc \
@@ -517,7 +517,7 @@ $AR rcs ../lib/libprotobuf-cpp-full.a *.o
 rm -r *.o
 
 cd ../libjsonpb
-$CC -std=c++17 -I../include -Iparse/include ${CFLAGS} -c parse/jsonpb.cpp
+$CC -std=c++17 -stdlib=libc++ -I../include -Iparse/include ${CFLAGS} -c parse/jsonpb.cpp
 $AR rcs ../lib/libjsonpbparse.a *.o
 rm -r *.o
 
@@ -530,15 +530,15 @@ case "$OSTYPE" in
   ;;
 esac
 
-${CPP} -std=c++17 -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpmake lpmake.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a -lpthread ${LDFLAGS}
+${CPP} -std=c++17 -stdlib=libc++ -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpmake lpmake.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a -lpthread ${LDFLAGS}
 
-${CPP} -std=c++17 -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpadd lpadd.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a -lpthread ${LDFLAGS}
+${CPP} -std=c++17 -stdlib=libc++ -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpadd lpadd.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a -lpthread ${LDFLAGS}
 
-${CPP} -std=c++17 -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpflash lpflash.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a -lpthread ${LDFLAGS}
+${CPP} -std=c++17 -stdlib=libc++ -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpflash lpflash.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a -lpthread ${LDFLAGS}
 
-${CPP} -std=c++17 -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpunpack lpunpack.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a -lpthread ${LDFLAGS}
+${CPP} -std=c++17 -stdlib=libc++ -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpunpack lpunpack.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a -lpthread ${LDFLAGS}
 
-${CPP} -std=c++17 -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpdump lpdump.cc dynamic_partitions_device_info.pb.cc lpdump_host.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a ../lib/lib/libjsonpbparse.a ../lib/lib/libprotobuf-cpp-full.a -lpthread ${LDFLAGS}
+${CPP} -std=c++17 -stdlib=libc++ -I../lib/include ${CFLAGS} -D_FILE_OFFSET_BITS=64 -o ../bin/lpdump lpdump.cc dynamic_partitions_device_info.pb.cc lpdump_host.cc ../lib/lib/liblp.a ../lib/lib/libsparse.a ../lib/lib/libext4_utils.a ../lib/lib/libz.a ../lib/lib/libbase.a ../lib/lib/fmtlib.a ../lib/lib/liblog.a ../lib/lib/libcrypto_utils.a ../lib/lib/libcrypto.a ../lib/lib/libjsonpbparse.a ../lib/lib/libprotobuf-cpp-full.a -lpthread ${LDFLAGS}
 
 cd ..
 rm -rf lib/lib
